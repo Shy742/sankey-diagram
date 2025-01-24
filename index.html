@@ -33,9 +33,8 @@
             color: '#ccc'
           }
         },
-        // Add this to shift the entire chart upwards
         chartArea: {
-          top: '40%', // Adjust this value to move the chart up or down
+          top: '5%',
           width: '100%',
           height: '95%'
         }
@@ -44,7 +43,6 @@
       var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
 
       const chartContainer = document.getElementById('chart-container');
-      // Adjust the chart container to use the full available space
       chartContainer.style.width = '100vw';
       chartContainer.style.height = '90vh';
       
