@@ -12,7 +12,23 @@
 
       var options = {
         width: '100%',
-        height: '100%', // Important: Set height to 100% within the scrollable div
+        height: '500px', // Adjust height as needed
+        backgroundColor: 'black', // Set background color to black
+        fontName: 'Arial', // Set font for labels
+        fontSize: 12, // Adjust font size for better readability
+        node: {
+          label: {
+            fontName: 'Arial',
+            fontSize: 14, // Larger font size for node labels
+            bold: true, // Bold node labels for emphasis
+            color: 'white' // Set node label color to white
+          },
+          width: 20, // Adjust node width for better spacing
+          color: '#ddd' // Set node color to light gray
+        },
+        links: {
+          color: '#ccc' // Set link color to light gray
+        }
       };
 
       var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
@@ -21,9 +37,10 @@
   </script>
   <style>
     #chart-container {
-      width: 100vw; /* Use viewport width */
-      height: 90vh; /* Use viewport height (adjust as needed) */
-      overflow: auto; /* Enable scrolling if content overflows */
+      width: 100vw;
+      height: 90vh;
+      overflow: auto;
+      background-color: black; /* Set container background to black */
     }
     body { margin: 0; } /* Reset body margins to avoid extra spacing */
   </style>
