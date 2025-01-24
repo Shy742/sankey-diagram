@@ -16,30 +16,33 @@
         backgroundColor: 'black',
         fontName: 'Arial',
         fontSize: 12,
-        node: {
-          label: {
-            fontName: 'Arial',
-            fontSize: 14,
-            bold: true,
-            color: 'white'
+        sankey: {
+          node: {
+            label: {
+              fontName: 'Arial',
+              fontSize: 14,
+              bold: true,
+              color: 'white'
+            },
+            width: 40, // Increased node width
+            nodePadding: 10, // Increased node padding
+            interNodeSpace: 5, // Increased space between nodes
+            color: '#ddd'
           },
-          width: 20,
-          color: '#ddd'
-        },
-        links: {
-          color: '#ccc'
+          link: {
+            color: '#ccc'
+          }
         }
       };
 
       var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
 
-      // Set a minimum height to prevent initial collapse
       const chartContainer = document.getElementById('chart-container');
-      chartContainer.style.minHeight = '600px'; // Adjust this value as needed
+      chartContainer.style.minHeight = '100px'; // Increased min height
+      chartContainer.style.minWidth = '100px'; // Increased min width
 
       chart.draw(data, options);
 
-      //Resize the chart on window resize
       window.addEventListener('resize', () => {
         chart.draw(data, options);
       });
@@ -47,14 +50,18 @@
   </script>
   <style>
     #chart-container {
-      width: 100vw;
-      height: 90vh;
+      width: 95vw; /* Slightly smaller width to avoid horizontal scrollbar on some screens */
+      height: 200vh;
       overflow: auto;
       background-color: black;
+      display: flex; /* Enable flexbox for centering */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
     }
-    body { margin: 0; background-color: black;} /* Reset body margins and set background */
+    body { margin: 0; background-color: black; }
     #sankey_basic {
-        min-width: 800px; /* Set a minimum width for the chart itself */
+        min-width: 1200px; /* Set a minimum width for the chart itself */
+        min-height: 400px;
     }
   </style>
 </head>
