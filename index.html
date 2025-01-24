@@ -35,7 +35,7 @@
         },
         // Add this to shift the entire chart upwards
         chartArea: {
-          top: '0.1%', // Adjust this value to move the chart up or down
+          top: '5%', // Adjust this value to move the chart up or down
           width: '100%',
           height: '95%'
         }
@@ -44,9 +44,10 @@
       var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
 
       const chartContainer = document.getElementById('chart-container');
-      chartContainer.style.minHeight = '100px';
-      chartContainer.style.minWidth = '100px';
-
+      // Adjust the chart container to use the full available space
+      chartContainer.style.width = '100vw';
+      chartContainer.style.height = '90vh';
+      
       chart.draw(data, options);
 
       window.addEventListener('resize', () => {
@@ -55,19 +56,23 @@
     }
   </script>
   <style>
-    #chart-container {
-      width: 95vw;
-      height: 8vh;
-      overflow: auto;
+    body {
+      margin: 0;
       background-color: black;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
     }
-    body { margin: 0; background-color: black; }
+    #chart-container {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: black;
+    }
     #sankey_basic {
-        width: 100%;
-        height: 100%;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
