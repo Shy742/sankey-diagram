@@ -8,7 +8,7 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-      var data = new google.visualization.DataTable(undefined);
+      var data = new google.visualization.DataTable({"cols":[{"id":"From","label":"From","type":"string"},{"id":"To","label":"To","type":"string"},{"id":"Weight","label":"Weight","type":"number"}],"rows":[{"c":[{"v":"Oil and Gas"},{"v":"Total revenue"},{"v":547942}]},{"c":[{"v":"Retail"},{"v":"Total revenue"},{"v":41390}]},{"c":[{"v":"Digital Services"},{"v":"Total revenue"},{"v":12128}]},{"c":[{"v":"Others"},{"v":"Total revenue"},{"v":59891}]},{"c":[{"v":"Total revenue"},{"v":"Cost of Materials Consumed"},{"v":376418}]},{"c":[{"v":"Total revenue"},{"v":"Purchase of Stock-in-Trade"},{"v":13453}]},{"c":[{"v":"Total revenue"},{"v":"Changes in Inventories of Finished Goods, Work-in-Progress and Stock-in-Trade"},{"v":2700}]},{"c":[{"v":"Total revenue"},{"v":"Excise Duty"},{"v":13408}]},{"c":[{"v":"Total revenue"},{"v":"Employee Benefits Expense"},{"v":7807}]},{"c":[{"v":"Total revenue"},{"v":"Finance Costs"},{"v":13430}]},{"c":[{"v":"Total revenue"},{"v":"Depreciation / Amortisation and Depletion Expense"},{"v":17690}]},{"c":[{"v":"Total revenue"},{"v":"Other Expenses"},{"v":59891}]}]});
 
       var options = {
         width: '100%',
