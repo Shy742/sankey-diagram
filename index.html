@@ -14,7 +14,7 @@
 <body>
     <div id='map'></div>
     <script>
-        mapboxgl.accessToken = 'pk.eyJ1Ijoic2h5NyIsImEiOiJjbTZja3Z0eHMwbTc3Mm5zN3NteDNhZWc2In0.GHQ-mjd9ZApLftV3-gz86w'; 
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2h5NyIsImEiOiJjbTZjbGo1cXAwYjV6Mm1zYmltNDVjbDZ5In0._Oj1hSoPDdrXU0gAdXQ7ww'; // Replace with your Mapbox access token
 
         const map = new mapboxgl.Map({
             container: 'map',
@@ -25,7 +25,7 @@
                     'raster-tiles': {
                         'type': 'raster',
                         'tiles': [
-                            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png' 
+                            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png' // Using Stadia Maps for Dark theme
                         ],
                         'tileSize': 256,
                         'attribution':
@@ -36,6 +36,10 @@
                         'tiles': ['https://tiles.stadiamaps.com/data/openmaptiles/{z}/{x}/{y}.pbf'],
                         'minzoom': 0,
                         'maxzoom': 14
+                    },
+                    'contours': {
+                        type: 'vector',
+                        url: 'mapbox://mapbox.mapbox-terrain-v2'
                     }
                 },
                 'layers': [
@@ -47,6 +51,12 @@
                         'maxzoom': 20
                     },
                     {
+                        'id': 'terrain-data',
+                        'type': 'terrain',
+                        'source': 'contours',
+                        'exaggeration': 0.3
+                    },
+                    { // Building Layer must be after Raster Layer
                         'id': 'building',
                         'source': 'openmaptiles',
                         'source-layer': 'building',
@@ -60,24 +70,12 @@
                             'fill-extrusion-opacity': 0.7
                         }
                     }
+
                 ]
             },
             center: [78.0297, 22.8046], // Jamshedpur coordinates
             zoom: 16,
             pitch: 60 // Tilt the map for a better 3D effect
-        });
-
-        map.on('load', () => {
-            map.addSource('contours', {
-                type: 'vector',
-                url: 'mapbox://mapbox.mapbox-terrain-v2'
-            });
-            map.addLayer({
-                'id': 'terrain-data',
-                'type': 'terrain',
-                'source': 'contours',
-                'exaggeration': 0.3
-            });
         });
     </script>
 </body>
