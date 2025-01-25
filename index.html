@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map with 3D Buildings</title>
+    <title>Interactive Map with Surat to Mumbai Route</title>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
     <style>
         body { margin: 0; padding: 0; }
@@ -23,9 +23,9 @@
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v11',
-            center: [0, 0],
-            zoom: 2,
-            pitch: 0, // Starts flat
+            center: [72.8777, 19.0760], // Mumbai center for initial view
+            zoom: 8,
+            pitch: 0,
             bearing: 0
         });
 
@@ -44,22 +44,14 @@
                 'type': 'fill-extrusion',
                 'minzoom': 15,
                 'paint': {
-                    'fill-extrusion-color': [
-                        'match', 
-                        ['get', 'type'], 
-                        'residential', '#a1d99b', 
-                        'commercial', '#3182bd', 
-                        'industrial', '#e6550d', 
-                        'public', '#d9d9d9', 
-                        '#8c96c6' // default 
-                    ],
+                    'fill-extrusion-color': '#aaa',
                     'fill-extrusion-height': ['get', 'height'],
                     'fill-extrusion-base': ['get', 'min_height'],
                     'fill-extrusion-opacity': 0.7
                 }
             });
 
-            // Adding a location indicator
+            // Adding a location indicator (if needed)
             map.addLayer({
                 'id': 'location-indicator',
                 'type': 'circle',
@@ -71,7 +63,7 @@
                             'type': 'Feature',
                             'geometry': {
                                 'type': 'Point',
-                                'coordinates': [0, 0] // Example location, change this to user's location
+                                'coordinates': [72.8777, 19.0760] // Mumbai as an example
                             }
                         }]
                     }
@@ -80,6 +72,40 @@
                     'circle-radius': 10,
                     'circle-color': '#FF0000',
                     'circle-opacity': 0.75
+                }
+            });
+
+            // Adding the route from Surat to Mumbai
+            const suratToMumbaiRoute = {
+                'type': 'FeatureCollection',
+                'features': [{
+                    'type': 'Feature',
+                    'geometry': {
+                        'type': 'LineString',
+                        'coordinates': [
+                            [72.8233, 21.1702], // Surat
+                            [72.8777, 19.0760]  // Mumbai
+                        ]
+                    }
+                }]
+            };
+
+            map.addSource('route', {
+                'type': 'geojson',
+                'data': suratToMumbaiRoute
+            });
+
+            map.addLayer({
+                'id': 'route',
+                'type': 'line',
+                'source': 'route',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': '#FFC0CB', // Pink color
+                    'line-width': 5
                 }
             });
 
@@ -96,28 +122,12 @@
             let is3D = false;
             document.getElementById('toggle3D').addEventListener('click', function() {
                 if (is3D) {
-                    map.easeTo({ pitch: 0, duration: 2000 }); // Flatten the map
+                    map.easeTo({ pitch: 0, duration: 2000 });
                 } else {
-                    map.easeTo({ pitch: 60, duration: 2000 }); // Tilt the map for a 3D view
+                    map.easeTo({ pitch: 60, duration: 2000 });
                 }
                 is3D = !is3D;
             });
-
-            // Zoom in to make buildings visible if they're not
-            map.flyTo({
-                center: [78.0297, 22.8046], // Jamshedpur coordinates as an example
-                zoom: 16,
-                essential: true // this animation is considered essential with respect to prefers-reduced-motion
-            });
-        });
-
-        // Interactive click for location information
-        map.on('click', function(e) {
-            var features = map.queryRenderedFeatures(e.point, { layers: ['3d-buildings'] });
-            if (features.length > 0) {
-                var feature = features[0];
-                alert('Clicked on a ' + (feature.properties.type || 'building') + ' at ' + e.lngLat.lng.toFixed(4) + ', ' + e.lngLat.lat.toFixed(4));
-            }
         });
     </script>
 </body>
