@@ -20,12 +20,11 @@
             container: 'map',
             style: {
                 'version': 8,
-                'name': 'Dark',
                 'sources': {
                     'raster-tiles': {
                         'type': 'raster',
                         'tiles': [
-                            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png' // Using Stadia Maps for Dark theme
+                            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
                         ],
                         'tileSize': 256,
                         'attribution':
@@ -37,9 +36,11 @@
                         'minzoom': 0,
                         'maxzoom': 14
                     },
-                    'contours': {
-                        type: 'vector',
-                        url: 'mapbox://mapbox.mapbox-terrain-v2'
+                    "mapbox-dem": { // Source for terrain
+                        "type": "raster-dem",
+                        "url": "mapbox://mapbox.mapbox-terrain-dem-v1",
+                        "tileSize": 512,
+                        "maxzoom": 16
                     }
                 },
                 'layers': [
@@ -51,12 +52,6 @@
                         'maxzoom': 20
                     },
                     {
-                        'id': 'terrain-data',
-                        'type': 'terrain',
-                        'source': 'contours',
-                        'exaggeration': 0.3
-                    },
-                    { // Building Layer must be after Raster Layer
                         'id': 'building',
                         'source': 'openmaptiles',
                         'source-layer': 'building',
@@ -64,18 +59,22 @@
                         'type': 'fill-extrusion',
                         'minzoom': 15,
                         'paint': {
-                            'fill-extrusion-color': '#aaa', // Building color
+                            'fill-extrusion-color': '#aaa',
                             'fill-extrusion-height': ['get', 'height'],
                             'fill-extrusion-base': ['get', 'min_height'],
                             'fill-extrusion-opacity': 0.7
                         }
                     }
-
                 ]
+            },
+            terrain: { // Correct terrain definition AT THE TOP LEVEL
+                source: 'mapbox-dem',
+                exaggeration: 1
             },
             center: [78.0297, 22.8046], // Jamshedpur coordinates
             zoom: 16,
-            pitch: 60 // Tilt the map for a better 3D effect
+            pitch: 60,
+            antialias: true
         });
     </script>
 </body>
