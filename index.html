@@ -1,82 +1,84 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', {'packages':['sankey']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-      var data = new google.visualization.DataTable({"cols":[{"id":"From","label":"From","type":"string"},{"id":"To","label":"To","type":"string"},{"id":"Weight","label":"Weight","type":"number"}],"rows":[{"c":[{"v":"Oil and Gas"},{"v":"Total revenue"},{"v":547942}]},{"c":[{"v":"Retail"},{"v":"Total revenue"},{"v":41390}]},{"c":[{"v":"Digital Services"},{"v":"Total revenue"},{"v":12128}]},{"c":[{"v":"Others"},{"v":"Total revenue"},{"v":59891}]},{"c":[{"v":"Total revenue"},{"v":"Cost of Materials Consumed"},{"v":376418}]},{"c":[{"v":"Total revenue"},{"v":"Purchase of Stock-in-Trade"},{"v":13453}]},{"c":[{"v":"Total revenue"},{"v":"Changes in Inventories of Finished Goods, Work-in-Progress and Stock-in-Trade"},{"v":2700}]},{"c":[{"v":"Total revenue"},{"v":"Excise Duty"},{"v":13408}]},{"c":[{"v":"Total revenue"},{"v":"Employee Benefits Expense"},{"v":7807}]},{"c":[{"v":"Total revenue"},{"v":"Finance Costs"},{"v":13430}]},{"c":[{"v":"Total revenue"},{"v":"Depreciation / Amortisation and Depletion Expense"},{"v":17690}]},{"c":[{"v":"Total revenue"},{"v":"Other Expenses"},{"v":59891}]}]});
-
-      var options = {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'black',
-        fontName: 'Arial',
-        fontSize: 12,
-        sankey: {
-          node: {
-            label: {
-              fontName: 'Arial',
-              fontSize: 14,
-              bold: true,
-              color: 'white'
-            },
-            width: 40,
-            nodePadding: 10,
-            interNodeSpace: 5,
-            color: '#ddd'
-          },
-          link: {
-            color: '#ccc'
-          }
-        },
-        chartArea: {
-          top: '5%',
-          width: '100%',
-          height: '95%'
-        }
-      };
-
-      var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
-
-      const chartContainer = document.getElementById('chart-container');
-      chartContainer.style.width = '100vw';
-      chartContainer.style.height = '90vh';
-      
-      chart.draw(data, options);
-
-      window.addEventListener('resize', () => {
-        chart.draw(data, options);
-      });
-    }
-  </script>
-  <style>
-    body {
-      margin: 0;
-      background-color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #chart-container {
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: black;
-    }
-    #sankey_basic {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <meta charset='utf-8' />
+    <title>Mapbox GL JS Extruded Buildings</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
 </head>
 <body>
-  <div id="chart-container">
-    <div id="sankey_basic"></div>
-  </div>
+    <div id='map'></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2h5NyIsImEiOiJjbTZja3Z0eHMwbTc3Mm5zN3NteDNhZWc2In0.GHQ-mjd9ZApLftV3-gz86w'; 
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: {
+                'version': 8,
+                'name': 'Dark',
+                'sources': {
+                    'raster-tiles': {
+                        'type': 'raster',
+                        'tiles': [
+                            'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png' 
+                        ],
+                        'tileSize': 256,
+                        'attribution':
+                            '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+                    },
+                    'openmaptiles': {
+                        'type': 'vector',
+                        'tiles': ['https://tiles.stadiamaps.com/data/openmaptiles/{z}/{x}/{y}.pbf'],
+                        'minzoom': 0,
+                        'maxzoom': 14
+                    }
+                },
+                'layers': [
+                    {
+                        'id': 'raster-tiles',
+                        'type': 'raster',
+                        'source': 'raster-tiles',
+                        'minzoom': 0,
+                        'maxzoom': 20
+                    },
+                    {
+                        'id': 'building',
+                        'source': 'openmaptiles',
+                        'source-layer': 'building',
+                        'filter': ['==', 'extrude', 'true'],
+                        'type': 'fill-extrusion',
+                        'minzoom': 15,
+                        'paint': {
+                            'fill-extrusion-color': '#aaa', // Building color
+                            'fill-extrusion-height': ['get', 'height'],
+                            'fill-extrusion-base': ['get', 'min_height'],
+                            'fill-extrusion-opacity': 0.7
+                        }
+                    }
+                ]
+            },
+            center: [78.0297, 22.8046], // Jamshedpur coordinates
+            zoom: 16,
+            pitch: 60 // Tilt the map for a better 3D effect
+        });
+
+        map.on('load', () => {
+            map.addSource('contours', {
+                type: 'vector',
+                url: 'mapbox://mapbox.mapbox-terrain-v2'
+            });
+            map.addLayer({
+                'id': 'terrain-data',
+                'type': 'terrain',
+                'source': 'contours',
+                'exaggeration': 0.3
+            });
+        });
+    </script>
 </body>
 </html>
