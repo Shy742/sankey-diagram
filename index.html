@@ -23,7 +23,7 @@
                 'sources': {
                     'openmaptiles': {
                         'type': 'vector',
-                        'tiles': ['https://tiles.stadiamaps.com/data/openmaptiles/{z}/{x}/{y}.pbf'],
+                        'tiles': ['https://tiles.stadiamaps.com/data/openmaptiles/{z}/{x}/{y}.pbf?api_key=6145633d-41dc-4936-bc9f-30c71f28e8f1'], // Add your Stadia Maps API key here
                         'minzoom': 0,
                         'maxzoom': 14
                     }
@@ -54,7 +54,7 @@
             },
             center: [78.0297, 22.8046], // Jamshedpur coordinates
             zoom: 16,
-            pitch: 0, // Flat view for 2D
+            pitch: 0,
             bearing: 0,
             antialias: true
         });
