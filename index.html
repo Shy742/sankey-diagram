@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +7,31 @@
     google.charts.setOnLoadCallback(drawChart);
 
     function drawChart() {
-      var data = new google.visualization.DataTable({"cols":[{"id":"From","label":"From","type":"string"},{"id":"To","label":"To","type":"string"},{"id":"Weight","label":"Weight","type":"number"}],"rows":[{"c":[{"v":"Value of Sales"},{"v":"Total revenue"},{"v":538564}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":18599}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":384021}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":15864}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":-10679}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":15443}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":8690}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":10054}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":17981}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":61384}]}]});
+      // Updated data from Reliance Industries Limited Integrated Annual Report 2024-25
+      // Segment net revenues flowing to Total Revenue (INR crores, FY 2024-25)
+      var rawData = {
+        "cols": [{"id":"From","label":"From","type":"string"},{"id":"To","label":"To","type":"string"},{"id":"Weight","label":"Weight","type":"number"}],
+        "rows": [
+          {"c":[{"v":"Oil to Chemicals (O2C)"},{"v":"Total Revenue"},{"v":605006}]},
+          {"c":[{"v":"Retail"},{"v":"Total Revenue"},{"v":291043}]},
+          {"c":[{"v":"Digital Services"},{"v":"Total Revenue"},{"v":131336}]},
+          {"c":[{"v":"Media & Entertainment"},{"v":"Total Revenue"},{"v":20696}]},
+          {"c":[{"v":"Oil and Gas"},{"v":"Total Revenue"},{"v":24881}]},
+          {"c":[{"v":"Others"},{"v":"Total Revenue"},{"v":49749}]}
+        ]
+      };
+
+      // No self-loops in this data, so no filtering needed
+      var filteredRows = rawData.rows;
+
+      // Build DataTable
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'From');
+      data.addColumn('string', 'To');
+      data.addColumn('number', 'Weight');
+      filteredRows.forEach(function(row) {
+        data.addRow([row.c[0].v, row.c[1].v, row.c[2].v]);
+      });
 
       var options = {
         width: '100%',
