@@ -1,134 +1,82 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map with Surat to Mumbai Route</title>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
-    <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-    </style>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['sankey']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var data = new google.visualization.DataTable({"cols":[{"id":"From","label":"From","type":"string"},{"id":"To","label":"To","type":"string"},{"id":"Weight","label":"Weight","type":"number"}],"rows":[{"c":[{"v":"Value of Sales"},{"v":"Total revenue"},{"v":538564}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":18599}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":384021}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":15864}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":-10679}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":15443}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":8690}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":10054}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":17981}]},{"c":[{"v":"Total revenue"},{"v":"Total revenue"},{"v":61384}]}]});
+
+      var options = {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'black',
+        fontName: 'Arial',
+        fontSize: 12,
+        sankey: {
+          node: {
+            label: {
+              fontName: 'Arial',
+              fontSize: 14,
+              bold: true,
+              color: 'white'
+            },
+            width: 40,
+            nodePadding: 10,
+            interNodeSpace: 5,
+            color: '#ddd'
+          },
+          link: {
+            color: '#ccc'
+          }
+        },
+        chartArea: {
+          top: '5%',
+          width: '100%',
+          height: '95%'
+        }
+      };
+
+      var chart = new google.visualization.Sankey(document.getElementById('sankey_basic'));
+
+      const chartContainer = document.getElementById('chart-container');
+      chartContainer.style.width = '100vw';
+      chartContainer.style.height = '90vh';
+      
+      chart.draw(data, options);
+
+      window.addEventListener('resize', () => {
+        chart.draw(data, options);
+      });
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #chart-container {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: black;
+    }
+    #sankey_basic {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div id="map"></div>
-    <div style="position: absolute; top: 10px; left: 10px; z-index: 1;">
-        <button id="switchStyle">Switch Style</button>
-        <button id="toggle3D">Toggle 3D View</button>
-    </div>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
-    <script>
-        mapboxgl.accessToken = 'pk.eyJ1Ijoic2h5NyIsImEiOiJjbTZjbGo1cXAwYjV6Mm1zYmltNDVjbDZ5In0._Oj1hSoPDdrXU0gAdXQ7ww';
-
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v11',
-            center: [72.8777, 19.0760], // Mumbai center for initial view
-            zoom: 8,
-            pitch: 0,
-            bearing: 0
-        });
-
-        // Error handling for map load
-        map.on('error', function(e) {
-            console.error('Map load error:', e.error);
-        });
-
-        map.on('load', function() {
-            // Adding extruded buildings
-            map.addLayer({
-                'id': '3d-buildings',
-                'source': 'composite',
-                'source-layer': 'building',
-                'filter': ['==', 'extrude', 'true'],
-                'type': 'fill-extrusion',
-                'minzoom': 15,
-                'paint': {
-                    'fill-extrusion-color': '#aaa',
-                    'fill-extrusion-height': ['get', 'height'],
-                    'fill-extrusion-base': ['get', 'min_height'],
-                    'fill-extrusion-opacity': 0.7
-                }
-            });
-
-            // Adding a location indicator (if needed)
-            map.addLayer({
-                'id': 'location-indicator',
-                'type': 'circle',
-                'source': {
-                    'type': 'geojson',
-                    'data': {
-                        'type': 'FeatureCollection',
-                        'features': [{
-                            'type': 'Feature',
-                            'geometry': {
-                                'type': 'Point',
-                                'coordinates': [72.8777, 19.0760] // Mumbai as an example
-                            }
-                        }]
-                    }
-                },
-                'paint': {
-                    'circle-radius': 10,
-                    'circle-color': '#FF0000',
-                    'circle-opacity': 0.75
-                }
-            });
-
-            // Adding the route from Surat to Mumbai
-            const suratToMumbaiRoute = {
-                'type': 'FeatureCollection',
-                'features': [{
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'LineString',
-                        'coordinates': [
-                            [72.8233, 21.1702], // Surat
-                            [72.8777, 19.0760]  // Mumbai
-                        ]
-                    }
-                }]
-            };
-
-            map.addSource('route', {
-                'type': 'geojson',
-                'data': suratToMumbaiRoute
-            });
-
-            map.addLayer({
-                'id': 'route',
-                'type': 'line',
-                'source': 'route',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': '#FFC0CB', // Pink color
-                    'line-width': 5
-                }
-            });
-
-            // Button to switch styles
-            document.getElementById('switchStyle').addEventListener('click', function() {
-                if (map.getStyle().name === 'Mapbox Dark') {
-                    map.setStyle('mapbox://styles/mapbox/light-v11');
-                } else {
-                    map.setStyle('mapbox://styles/mapbox/dark-v11');
-                }
-            });
-
-            // Button to toggle 3D view
-            let is3D = false;
-            document.getElementById('toggle3D').addEventListener('click', function() {
-                if (is3D) {
-                    map.easeTo({ pitch: 0, duration: 2000 });
-                } else {
-                    map.easeTo({ pitch: 60, duration: 2000 });
-                }
-                is3D = !is3D;
-            });
-        });
-    </script>
+  <div id="chart-container">
+    <div id="sankey_basic"></div>
+  </div>
 </body>
 </html>
